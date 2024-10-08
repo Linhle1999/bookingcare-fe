@@ -2,10 +2,45 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import React, { useState } from 'react'
 import SurveyQuestions from '../SurveyQuestions/SurveyQuestions'
+import bannerImg from '../../assets/images/banner.jpg'
+import khamChuyenKhoaIcon from '../../assets/icons/services/icon-kham-chuyen-khoa.webp'
+import khamTongQuatIcon from '../../assets/icons/services/icon-kham-tong-quat.webp'
+import sucKhoeTinhThanIcon from '../../assets/icons/services/icon-suc-khoe-tinh-than.webp'
+import baiTestSucKhoeIcon from '../../assets/icons/services/icon-bai-test-suc-khoe.webp'
+import yTeGanNhaIcon from '../../assets/icons/services/icon-near-home.webp'
 
 const Home = () => {
   const [showPopup, setShowPopup] = useState(false)
   const [surveyStarted, setSurveyStarted] = useState(false) // State mới để theo dõi khi bắt đầu làm bài test
+  const listServices = [
+    {
+      name: 'Khám chuyên khoa',
+      icon: khamChuyenKhoaIcon
+    },
+    {
+      name: 'Khám tổng quát',
+      icon: khamTongQuatIcon
+    },
+    {
+      name: 'Sức khoẻ tinh thần',
+      icon: sucKhoeTinhThanIcon
+    },
+    {
+      name: 'Bài test sức khoẻ',
+      icon: baiTestSucKhoeIcon
+    },
+    {
+      name: 'Y tế gần bạn',
+      icon: yTeGanNhaIcon
+    }
+  ]
+
+  const listServicesContent = listServices.map((service) => (
+    <div className='flex gap-x-8 p-6 items-center w-full border border-gray-300 rounded-xl' key={service.name}>
+      <img className='h-16' src={service.icon} alt={service.name} />
+      <span className='font-bold text-xl'>{service.name}</span>
+    </div>
+  ))
 
   const handleButtonClick = () => {
     setShowPopup(true) // Hiển thị popup khi click vào button
@@ -25,20 +60,27 @@ const Home = () => {
   }
 
   return (
-    <div className='mx-auto w-5/5 xl:w-4/5 px-3'>
-      {!surveyStarted && (
-        <>
-          <div className='flex flex-wrap items-center pb-3 whitespace-nowrap'>
-            <a href='/' className='px-1 text-primary flex-shrink-0 text-xs'>
-              #
-            </a>
-            <span className='text-primary flex-shrink-0'>/</span>
-            <a href='/' className='px-1 text-primary flex-shrink-0 text-xs'>
-              Bài Test
-            </a>
-            <p className='overflow-hidden'>Bài Test đánh giá trầm cảm Beck </p>
+    <div className=' w-full'>
+      <div className='flex'>
+        <div className='w-full relative'>
+          <img className='w-full h-[600px] object-center object-cover' src={bannerImg} alt='banner' />
+          <div className='bg-black absolute top-0 left-0 w-full h-full opacity-30 z-10'></div>
+          <div className='w-[90%] mx-auto'>
+            <div className='absolute top-1/3 left-[10%] z-20 flex flex-col gap-y-4'>
+              <span className='text-5xl font-bold text-white'>Booking Care</span>
+              <span className='xl:text-4xl text-3xl font-bold text-white'>
+                Nơi chăm sóc sức khoẻ tinh thần cho mọi người
+              </span>
+            </div>
           </div>
-
+        </div>
+      </div>
+      {!surveyStarted && (
+        <div className='w-full xl:w-4/5 mx-auto mt-20'>
+          <div className='flex flex-col gap-y-4 mb-10'>
+            <h3 className='text-2xl font-bold'>Dịch vụ toàn diện</h3>
+            <div className='grid xl:grid-cols-2 grid-cols-1 gap-8'>{listServicesContent}</div>
+          </div>
           <div className='flex justify-between pb-9'>
             <h6 className='text-2xl font-semibold'>Bài Test đánh giá trầm cảm Beck </h6>
           </div>
@@ -51,7 +93,9 @@ const Home = () => {
           </div>
           <div className='py-5'>
             <p className=' pt-4 pb-2'>
-              <strong>Bài Test đánh giá trầm cảm Beck </strong> Bài test mức độ trầm cảm BECK là một trong những phương pháp nhằm đánh giá về cảm xúc và mức độ trầm cảm tương đối phổ biến, được sử dụng trong các bệnh viện, phòng khám chuyên sâu về sức khoẻ tinh thần hiện nay.
+              <strong>Bài Test đánh giá trầm cảm Beck </strong> Bài test mức độ trầm cảm BECK là một trong những phương
+              pháp nhằm đánh giá về cảm xúc và mức độ trầm cảm tương đối phổ biến, được sử dụng trong các bệnh viện,
+              phòng khám chuyên sâu về sức khoẻ tinh thần hiện nay.
             </p>
             <p className='py-2'>Bài test nhằm mục đích:</p>
             <ul className='py-2 list-disc px-10'>
@@ -93,7 +137,7 @@ const Home = () => {
               BẮT ĐẦU
             </button>
           </div>
-        </>
+        </div>
       )}
       {showPopup && (
         <div
