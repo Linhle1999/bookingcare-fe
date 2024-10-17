@@ -6,7 +6,7 @@ import { responseModal } from 'src/models/api-response'
 
 // Validation schema using Yup
 const validationSchema = Yup.object({
-  username: Yup.string().required('Vui lòng nhập tên đăng nhập').min(3, 'Tên đăng nhập phải có ít nhất 3 ký tự'),
+  fullName: Yup.string().required('Vui lòng nhập họ tên của bạn').min(3, 'Họ tên phải có ít nhất 3 ký tự'),
   password: Yup.string().required('Vui lòng nhập mật khẩu').min(6, 'Mật khẩu phải có ít nhất 6 ký tự'),
   email: Yup.string().email('Email không hợp lệ').required('Vui lòng nhập email'),
   phoneNumber: Yup.string()
@@ -18,7 +18,7 @@ const validationSchema = Yup.object({
 const RegisterForm: React.FC = () => {
   const formik = useFormik({
     initialValues: {
-      username: '',
+      fullName: '',
       password: '',
       email: '',
       phoneNumber: ''
@@ -33,7 +33,7 @@ const RegisterForm: React.FC = () => {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            fullName: values.username,
+            fullName: values.fullName,
             password: values.password,
             email: values.email,
             phoneNumber: values.phoneNumber,
@@ -66,22 +66,22 @@ const RegisterForm: React.FC = () => {
     <div className='max-w-md mx-auto bg-white p-6 rounded-lg shadow-lg my-20 border'>
       <h2 className='text-2xl font-bold mb-6 text-center'>Đăng ký</h2>
       <form onSubmit={formik.handleSubmit}>
-        {/* Tên đăng nhập */}
+        {/* Họ và tên */}
         <div className='mb-4'>
-          <RadixLabel.Root htmlFor='username' className='block text-sm font-medium text-gray-700'>
-            Tên đăng nhập
+          <RadixLabel.Root htmlFor='fullName' className='block text-sm font-medium text-gray-700'>
+            Họ và tên
           </RadixLabel.Root>
           <input
-            id='username'
-            name='username'
+            id='fullName'
+            name='fullName'
             type='text'
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            value={formik.values.username}
+            value={formik.values.fullName}
             className='mt-1 p-2 border border-gray-300 rounded-md w-full'
           />
-          {formik.touched.username && formik.errors.username ? (
-            <p className='text-red-500 text-sm'>{formik.errors.username}</p>
+          {formik.touched.fullName && formik.errors.fullName ? (
+            <p className='text-red-500 text-sm'>{formik.errors.fullName}</p>
           ) : null}
         </div>
 
