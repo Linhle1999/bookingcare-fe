@@ -4,6 +4,7 @@ import ChatBot from './components/ChatBot/ChatBox'
 import Reservation from './components/Reservation/Reservation'
 import LoginForm from './components/Login/LoginForm'
 import RegisterForm from './components/Register/RegisterForm'
+import SurveyQuestions from './components/SurveyQuestions/SurveyQuestions'
 
 export default function useRouteElements() {
   const routeElements = useRoutes([
@@ -26,6 +27,10 @@ export default function useRouteElements() {
     {
       path: '/register',
       element: <RegisterForm />
+    },
+    {
+      path: '/survey',
+      element: <SurveyQuestions />
     }
   ])
   return routeElements

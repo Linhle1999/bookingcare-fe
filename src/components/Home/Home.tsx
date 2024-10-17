@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import SurveyQuestions from '../SurveyQuestions/SurveyQuestions'
 import bannerImg from '../../assets/images/banner.jpg'
 import khamChuyenKhoaIcon from '../../assets/icons/services/icon-kham-chuyen-khoa.webp'
@@ -8,8 +8,10 @@ import khamTongQuatIcon from '../../assets/icons/services/icon-kham-tong-quat.we
 import sucKhoeTinhThanIcon from '../../assets/icons/services/icon-suc-khoe-tinh-than.webp'
 import baiTestSucKhoeIcon from '../../assets/icons/services/icon-bai-test-suc-khoe.webp'
 import yTeGanNhaIcon from '../../assets/icons/services/icon-near-home.webp'
+import { useNavigate } from 'react-router-dom'
 
 const Home = () => {
+  const navigate = useNavigate()
   const [showPopup, setShowPopup] = useState(false)
   const [surveyStarted, setSurveyStarted] = useState(false) // State mới để theo dõi khi bắt đầu làm bài test
   const listServices = [
@@ -41,6 +43,12 @@ const Home = () => {
       <span className='font-bold text-xl'>{service.name}</span>
     </div>
   ))
+
+  useEffect(() => {
+    if (surveyStarted) {
+      navigate('/survey')
+    }
+  }, [surveyStarted])
 
   const handleButtonClick = () => {
     setShowPopup(true) // Hiển thị popup khi click vào button
@@ -75,70 +83,70 @@ const Home = () => {
           </div>
         </div>
       </div>
-      {!surveyStarted && (
-        <div className='w-full xl:w-4/5 mx-auto mt-20'>
-          <div className='flex flex-col gap-y-4 mb-10'>
-            <h3 className='text-2xl font-bold'>Dịch vụ toàn diện</h3>
-            <div className='grid xl:grid-cols-2 grid-cols-1 gap-8'>{listServicesContent}</div>
-          </div>
-          <div className='flex justify-between pb-9'>
-            <h6 className='text-2xl font-semibold'>Bài Test đánh giá trầm cảm Beck </h6>
-          </div>
-          <div className='md:relative w-full  h-[200px] sm:h-[300px] md:h-[380px] '>
-            <img
-              className='md:absolute inset-0 w-full h-full object-cover block'
-              src='https://cdn.bookingcare.vn/fo/w1920/2023/12/27/170354-test-beck.png'
-              alt=''
-            />
-          </div>
-          <div className='py-5'>
-            <p className=' pt-4 pb-2'>
-              <strong>Bài Test đánh giá trầm cảm Beck </strong> Bài test mức độ trầm cảm BECK là một trong những phương
-              pháp nhằm đánh giá về cảm xúc và mức độ trầm cảm tương đối phổ biến, được sử dụng trong các bệnh viện,
-              phòng khám chuyên sâu về sức khoẻ tinh thần hiện nay.
-            </p>
-            <p className='py-2'>Bài test nhằm mục đích:</p>
-            <ul className='py-2 list-disc px-10'>
-              <li>Tự đánh giá tình trạng Sức khoẻ tinh thần cá nhân.</li>
-              <li>Dự đoán về Sức khoẻ tinh thần và có kế hoạch thăm khám phù hợp.</li>
-              <li>Tổng hợp thông tin để thuận tiện khi thăm khám với Bác sĩ/Chuyên gia</li>
-            </ul>
-            <p className='py-2'>
-              <strong>Nguyên tắc thực hiện bài test:</strong>
-            </p>
-            <p className='py-2'>
-              Hãy đọc mỗi câu hỏi sau và chọn đáp án gần giống nhất với{' '}
-              <strong>tình trạng mà bạn cảm thấy trong suốt một tuần qua</strong>. Không có câu trả lời đúng hay sai. Và
-              đừng dừng lại quá lâu ở bất kỳ câu nào.
-            </p>
-            <p className='py-2'>
-              <strong>Lưu ý:</strong>
-            </p>
-            <p className='py-2'>
-              Kết quả bài test này chỉ mang tính chất tham khảo, không có giá trị thay thế chẩn đoán y khoa bởi bác
-              sĩ/chuyên gia có chuyên môn.
-            </p>
-            <p className='py-2'>
-              <strong>Nguồn tham khảo:</strong>
-            </p>
-            <p className='py-2'>
-              <strong>
-                <a href='/' className='text-primary'>
-                  Viện Sức khỏe Tâm thần, Bệnh viện Bạch Mai
-                </a>
-              </strong>
-            </p>
-          </div>
-          <div className='flex justify-center pt-2 pb-20'>
-            <button
-              onClick={handleButtonClick}
-              className='w-1/2 bg-yellow-400 text-white py-2 rounded-sm text-xl font-semibold outline-primary'
-            >
-              BẮT ĐẦU
-            </button>
-          </div>
+
+      <div className='w-full xl:w-4/5 mx-auto mt-20'>
+        <div className='flex flex-col gap-y-4 mb-10'>
+          <h3 className='text-2xl font-bold'>Dịch vụ toàn diện</h3>
+          <div className='grid xl:grid-cols-2 grid-cols-1 gap-8'>{listServicesContent}</div>
         </div>
-      )}
+        <div className='flex justify-between pb-9'>
+          <h6 className='text-2xl font-semibold'>Bài Test đánh giá trầm cảm Beck </h6>
+        </div>
+        <div className='md:relative w-full  h-[200px] sm:h-[300px] md:h-[380px] '>
+          <img
+            className='md:absolute inset-0 w-full h-full object-cover block'
+            src='https://cdn.bookingcare.vn/fo/w1920/2023/12/27/170354-test-beck.png'
+            alt=''
+          />
+        </div>
+        <div className='py-5'>
+          <p className=' pt-4 pb-2'>
+            <strong>Bài Test đánh giá trầm cảm Beck </strong> Bài test mức độ trầm cảm BECK là một trong những phương
+            pháp nhằm đánh giá về cảm xúc và mức độ trầm cảm tương đối phổ biến, được sử dụng trong các bệnh viện, phòng
+            khám chuyên sâu về sức khoẻ tinh thần hiện nay.
+          </p>
+          <p className='py-2'>Bài test nhằm mục đích:</p>
+          <ul className='py-2 list-disc px-10'>
+            <li>Tự đánh giá tình trạng Sức khoẻ tinh thần cá nhân.</li>
+            <li>Dự đoán về Sức khoẻ tinh thần và có kế hoạch thăm khám phù hợp.</li>
+            <li>Tổng hợp thông tin để thuận tiện khi thăm khám với Bác sĩ/Chuyên gia</li>
+          </ul>
+          <p className='py-2'>
+            <strong>Nguyên tắc thực hiện bài test:</strong>
+          </p>
+          <p className='py-2'>
+            Hãy đọc mỗi câu hỏi sau và chọn đáp án gần giống nhất với{' '}
+            <strong>tình trạng mà bạn cảm thấy trong suốt một tuần qua</strong>. Không có câu trả lời đúng hay sai. Và
+            đừng dừng lại quá lâu ở bất kỳ câu nào.
+          </p>
+          <p className='py-2'>
+            <strong>Lưu ý:</strong>
+          </p>
+          <p className='py-2'>
+            Kết quả bài test này chỉ mang tính chất tham khảo, không có giá trị thay thế chẩn đoán y khoa bởi bác
+            sĩ/chuyên gia có chuyên môn.
+          </p>
+          <p className='py-2'>
+            <strong>Nguồn tham khảo:</strong>
+          </p>
+          <p className='py-2'>
+            <strong>
+              <a href='/' className='text-primary'>
+                Viện Sức khỏe Tâm thần, Bệnh viện Bạch Mai
+              </a>
+            </strong>
+          </p>
+        </div>
+        <div className='flex justify-center pt-2 pb-20'>
+          <button
+            onClick={handleButtonClick}
+            className='w-1/2 bg-yellow-400 text-white py-2 rounded-sm text-xl font-semibold outline-primary'
+          >
+            BẮT ĐẦU
+          </button>
+        </div>
+      </div>
+
       {showPopup && (
         <div
           className='fixed inset-0 flex items-center justify-center bg-black bg-opacity-60'
@@ -192,7 +200,6 @@ const Home = () => {
         </div>
       </div> */}
       {/* END  */}
-      {surveyStarted && <SurveyQuestions />}
     </div>
   )
 }

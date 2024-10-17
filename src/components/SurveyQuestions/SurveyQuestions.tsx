@@ -4,6 +4,7 @@ import axios from 'axios' // Import thư viện axios để thực hiện các r
 import ProgressBar from './ProgressBar' // Import component ProgressBar
 import Question from './Question' // Import component Question
 import ChatBot from '../ChatBot/ChatBox'
+import { questions } from 'src/assets/data/data'
 
 // Định nghĩa interface cho dữ liệu câu hỏi
 interface QuestionData {
@@ -28,11 +29,11 @@ const SurveyQuestions: React.FC = () => {
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/questions') // Gửi request GET để lấy dữ liệu câu hỏi
-        setQuestionsData(response.data) // Cập nhật state questionsData với dữ liệu câu hỏi nhận được
+        // const response = await axios.get('http://localhost:8080/questions') // Gửi request GET để lấy dữ liệu câu hỏi
+        setQuestionsData(questions) // Cập nhật state questionsData với dữ liệu câu hỏi nhận được
         // const list: readonly QuestionData[] = [...listQuestions] // Initialize listQuestions with some data
         // setQuestionsData(list as QuestionData[])
-        setAnswers(new Array(response.data.length).fill(0)) // Khởi tạo mảng answers với độ dài bằng số lượng câu hỏi và mỗi phần tử đều là 0
+        setAnswers(new Array(questions.length).fill(0)) // Khởi tạo mảng answers với độ dài bằng số lượng câu hỏi và mỗi phần tử đều là 0
         setLoading(false) // Đặt trạng thái loading thành false
       } catch (error) {
         console.error('Failed to fetch questions:', error) // In lỗi nếu có lỗi xảy ra khi fetch dữ liệu
