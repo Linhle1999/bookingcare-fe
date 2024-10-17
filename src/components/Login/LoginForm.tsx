@@ -2,6 +2,8 @@ import React from 'react'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import * as RadixLabel from '@radix-ui/react-label'
+import Cookies from 'js-cookie'
+import { responseModal } from 'src/models/api-response'
 
 // Validation schema using Yup
 const validationSchema = Yup.object({
@@ -16,9 +18,41 @@ const LoginForm: React.FC = () => {
       password: ''
     },
     validationSchema,
-    onSubmit: (values) => {
-      console.log('Form values:', values)
-      alert('Đăng nhập thành công!')
+    onSubmit: async (values) => {
+      try {
+        // Send the POST request to the login API
+        const response = await fetch('http://localhost:8080/auth/signin', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            username: values.username,
+            password: values.password
+          })
+        })
+
+        // Check if the request was successful
+        if (response.ok) {
+          const result: responseModal = await response.json()
+          console.log(result)
+
+          // Set the token in cookies with a 30-minute expiration
+          Cookies.set('token', result.data, { expires: 0.5 }) // 0.5 days = 30 minutes
+
+          // Notify the user about successful login
+          alert('Đăng nhập thành công!')
+
+          // Redirect to the homepage or dashboard (optional)
+          // window.location.href = '/dashboard'
+        } else {
+          // Handle error if the login fails
+          alert('Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.')
+        }
+      } catch (error) {
+        console.error('Error logging in:', error)
+        alert('Có lỗi xảy ra. Vui lòng thử lại sau.')
+      }
     }
   })
 

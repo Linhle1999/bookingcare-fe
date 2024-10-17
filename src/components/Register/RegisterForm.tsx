@@ -2,6 +2,7 @@ import React from 'react'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import * as RadixLabel from '@radix-ui/react-label'
+import { responseModal } from 'src/models/api-response'
 
 // Validation schema using Yup
 const validationSchema = Yup.object({
@@ -23,9 +24,41 @@ const RegisterForm: React.FC = () => {
       phoneNumber: ''
     },
     validationSchema,
-    onSubmit: (values) => {
-      console.log('Form values:', values)
-      alert('Đăng ký thành công!')
+    onSubmit: async (values) => {
+      try {
+        // Send the POST request to the registration API
+        const response = await fetch('http://localhost:8080/auth/signup', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            fullName: values.username,
+            password: values.password,
+            email: values.email,
+            phoneNumber: values.phoneNumber,
+            roleName: 'ROLE_USER'
+          })
+        })
+
+        // Check if the request was successful
+        if (response.ok) {
+          const result: responseModal = await response.json()
+
+          // Notify the user of successful registration
+          alert(result.data)
+
+          // Optionally redirect the user to the login page or another page
+          window.location.href = '/login'
+        } else {
+          // Handle errors from the response
+          const errorData = await response.json()
+          alert(`Đăng ký thất bại: ${errorData.message}`)
+        }
+      } catch (error) {
+        console.error('Error during registration:', error)
+        alert('Có lỗi xảy ra. Vui lòng thử lại sau.')
+      }
     }
   })
 
