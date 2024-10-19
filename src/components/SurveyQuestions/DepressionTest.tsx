@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import * as RadixRadioGroup from '@radix-ui/react-radio-group'
+import { questionsTest } from 'src/assets/data/data'
 
 interface Answer {
   answer: string
@@ -15,43 +16,47 @@ interface Question {
 const DepressionTest: React.FC = () => {
   const [questions, setQuestions] = useState<Question[]>([])
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
-  const [selectedPoints, setSelectedPoints] = useState<number | null>(null)
+  const [selectedAnswerIndex, setSelectedAnswerIndex] = useState<number | null>(null) // Chọn theo chỉ số câu trả lời
   const [totalPoints, setTotalPoints] = useState(0)
-  const [userAnswers, setUserAnswers] = useState<number[]>([]) // Lưu điểm của từng câu hỏi
-  const [loading, setLoading] = useState(true) // Trạng thái loading
-  const [error, setError] = useState<string | null>(null) // Lưu lỗi (nếu có)
+  const [userAnswers, setUserAnswers] = useState<number[]>([]) // Lưu chỉ số của câu trả lời
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  const questionCallApi: Question[] = [...questionsTest]
 
   // Gọi API từ URL
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
-        const response = await fetch('http://localhost:8080/questions') // Gọi API
-        if (!response.ok) {
-          throw new Error('Failed to fetch questions')
-        }
-        const data = await response.json()
-        setQuestions(data.data) // Lấy dữ liệu câu hỏi từ API và set vào state
-        setLoading(false) // Tắt trạng thái loading khi hoàn thành
+        // const response = await fetch('http://localhost:8080/questions')
+        // if (!response.ok) {
+        //   throw new Error('Failed to fetch questions')
+        // }
+        // const data = await response.json()
+        // setQuestions(data.data)
+        setQuestions(questionCallApi)
+        setLoading(false)
       } catch (err: any) {
-        setError(err.message) // Set thông báo lỗi nếu có
+        setError(err.message)
         setLoading(false)
       }
     }
 
-    fetchQuestions() // Gọi hàm fetch khi component render
+    fetchQuestions()
   }, [])
 
   // Xử lý khi chọn câu trả lời
-  const handleAnswerSelect = (point: number) => {
-    setSelectedPoints(point)
+  const handleAnswerSelect = (index: number) => {
+    setSelectedAnswerIndex(index)
   }
 
   // Xử lý khi nhấn nút "Câu hỏi kế tiếp"
   const handleNextQuestion = () => {
-    if (selectedPoints !== null) {
-      setUserAnswers((prev) => [...prev, selectedPoints])
-      setTotalPoints((prev) => prev + selectedPoints)
-      setSelectedPoints(null) // Reset lựa chọn
+    if (selectedAnswerIndex !== null) {
+      const selectedAnswer = questions[currentQuestionIndex].answers[selectedAnswerIndex]
+      setUserAnswers((prev) => [...prev, selectedAnswerIndex])
+      setTotalPoints((prev) => prev + selectedAnswer.point)
+      setSelectedAnswerIndex(null) // Reset lựa chọn
       setCurrentQuestionIndex((prev) => prev + 1) // Tăng chỉ số câu hỏi hiện tại
     }
   }
@@ -59,10 +64,11 @@ const DepressionTest: React.FC = () => {
   // Xử lý khi nhấn nút "Quay lại"
   const handlePreviousQuestion = () => {
     if (currentQuestionIndex > 0) {
-      const lastAnswer = userAnswers.pop() // Lấy câu trả lời gần nhất
-      setTotalPoints((prev) => prev - (lastAnswer || 0)) // Trừ điểm câu gần nhất
+      const lastAnswerIndex = userAnswers.pop() // Lấy câu trả lời gần nhất
+      const lastAnswer = questions[currentQuestionIndex - 1].answers[lastAnswerIndex || 0]
+      setTotalPoints((prev) => prev - (lastAnswer?.point || 0)) // Trừ điểm câu gần nhất
       setCurrentQuestionIndex((prev) => prev - 1) // Quay lại câu trước
-      setSelectedPoints(userAnswers[currentQuestionIndex - 1] || null) // Hiển thị lựa chọn trước đó
+      setSelectedAnswerIndex(lastAnswerIndex || null) // Hiển thị lựa chọn trước đó
     }
   }
 
@@ -90,12 +96,42 @@ const DepressionTest: React.FC = () => {
   }
 
   if (loading) {
-    return <div>Loading...</div> // Hiển thị trạng thái đang tải
+    return <div>Loading...</div>
   }
 
   if (error) {
-    return <div>Error: {error}</div> // Hiển thị thông báo lỗi
+    return <div>Error: {error}</div>
   }
+
+  // Tạo danh sách A, B, C,... cho các câu trả lời
+  const answerLabels = [
+    'A',
+    'B',
+    'C',
+    'D',
+    'E',
+    'F',
+    'G',
+    'H',
+    'I',
+    'J',
+    'K',
+    'L',
+    'M',
+    'N',
+    'O',
+    'P',
+    'Q',
+    'R',
+    'S',
+    'T',
+    'U',
+    'V',
+    'W',
+    'X',
+    'Y',
+    'Z'
+  ]
 
   return (
     <div className='max-w-xl mx-auto mt-10 p-6 bg-white shadow rounded'>
@@ -106,18 +142,19 @@ const DepressionTest: React.FC = () => {
           </h2>
 
           <RadixRadioGroup.Root
-            className='space-y-4'
-            value={selectedPoints !== null ? selectedPoints.toString() : ''}
+            className='flex flex-col space-y-4'
+            value={selectedAnswerIndex !== null ? selectedAnswerIndex.toString() : ''}
             onValueChange={(value) => handleAnswerSelect(Number(value))}
           >
             {questions[currentQuestionIndex].answers.map((answer, index) => (
               <RadixRadioGroup.Item
                 key={index}
-                value={answer.point.toString()}
-                className={`cursor-pointer p-2 rounded-md border ${
-                  selectedPoints === answer.point ? 'bg-blue-500 text-white' : 'bg-gray-100'
+                value={index.toString()} // Chọn theo chỉ số câu trả lời
+                className={`flex flex-row cursor-pointer p-2 rounded-md border ${
+                  selectedAnswerIndex === index ? 'bg-blue-500 text-white' : 'bg-gray-100'
                 }`}
               >
+                <span className='mr-2'>{answerLabels[index]}.</span> {/* Thêm A, B, C,... */}
                 {answer.answer}
               </RadixRadioGroup.Item>
             ))}
@@ -134,14 +171,14 @@ const DepressionTest: React.FC = () => {
             <button
               className='bg-blue-500 text-white py-2 px-4 rounded disabled:opacity-50'
               onClick={handleNextQuestion}
-              disabled={selectedPoints === null}
+              disabled={selectedAnswerIndex === null}
             >
               Câu hỏi kế tiếp
             </button>
           </div>
         </>
       ) : (
-        renderResult() // Hiển thị kết quả sau khi hoàn thành bài test
+        renderResult()
       )}
     </div>
   )
