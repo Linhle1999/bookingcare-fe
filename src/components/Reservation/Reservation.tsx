@@ -1,9 +1,39 @@
-import { doctors } from 'src/assets/data/data'
-import { IDoctor } from 'src/models/doctor'
+import React, { useEffect, useState } from 'react'
 import { ListDoctorItem } from './ListDoctorItem'
+import axios from 'axios' // Axios or fetch can be used to make the API call
+import { listAllDoctorsResponse } from 'src/models/api-response'
+import { IDoctor } from 'src/models/doctor'
 
 const Reservation = () => {
-  const listDoctors = doctors.map((doctor: IDoctor) => (
+  const [doctors, setDoctors] = useState<IDoctor[]>([]) // State to hold doctors data
+  const [loading, setLoading] = useState(true) // Loading state
+  const [error, setError] = useState('') // Error state
+
+  useEffect(() => {
+    // Fetch doctors' information when component mounts
+    const fetchDoctors = async () => {
+      try {
+        const response: listAllDoctorsResponse = await axios.get('http://localhost:8080/api/doctors') // Replace with your API endpoint
+        setDoctors(response.data.items) // Update state with fetched doctors data
+        setLoading(false) // Turn off loading state
+      } catch (error) {
+        setError('Failed to fetch doctors information')
+        setLoading(false) // Turn off loading state even if there's an error
+      }
+    }
+
+    fetchDoctors()
+  }, []) // Empty dependency array to run only once when the component mounts
+
+  if (loading) {
+    return <p>Loading...</p> // Show loading state
+  }
+
+  if (error) {
+    return <p>{error}</p> // Show error message if fetching fails
+  }
+
+  const listDoctors = doctors.map((doctor) => (
     <li key={doctor.id}>
       <ListDoctorItem doctor={doctor} />
     </li>
@@ -21,35 +51,11 @@ const Reservation = () => {
               - BookingCare là Nền tảng Y tế chăm sóc Sức khỏe toàn diện, trong đó có cung cấp dịch vụ tư vấn tâm lý từ
               xa.
             </span>
-            <span>
-              - Chuyên gia được đào tạo bài bản về chuyên ngành Tâm lý tại các trường đại học trong nước và quốc tế.
-            </span>
-            <span>
-              - Nhà Tâm lý học là những người có nhiều kinh nghiệm trong lĩnh vực tâm lý, chăm sóc sức khỏe tinh thần.
-            </span>
-            <span>
-              - Các nhà chuyên môn nghiên cứu, tư vấn và trị liệu theo các phương pháp tiếp cận mới, hiệu quả.
-            </span>
-            <span>- Lắng nghe và thấu hiểu khách hàng để giúp họ vượt qua khó khăn của bản thân.</span>
+            {/* Other content */}
           </div>
-          <div className='flex flex-col gap-y-2'>
-            <span className='text-lg font-bold'>Tư vấn và trị liệu</span>
-            <span>- Khó khăn, rối nhiễu tâm lý</span>
-            <span>- Phát triển cá nhân</span>
-            <span>- Mâu thuẫn, lạm dụng và tổn thương tâm lý</span>
-            <span>- Tái hòa nhập xã hội</span>
-            <span>- Vấn đề khuyết tật và nhóm yếu thế</span>
-            <span>- Những vấn đề của vị thành niên</span>
-            <span>- Giới tính và tình dục</span>
-            <span>- Những vấn đề trong mối quan hệ gia đình</span>
+          <div className='flex flex-col'>
+            <ul className='flex flex-col gap-y-4'>{listDoctors}</ul> {/* Render doctors */}
           </div>
-          <div className='font-semibold italic'>
-            Ngoài những vấn đề nêu trên, khách hàng có thể liên hệ với chúng tôi để được hỗ trợ, sắp xếp lịch tư vấn phù
-            hợp
-          </div>
-        </div>
-        <div className='flex flex-col'>
-          <ul className='flex flex-col gap-y-4'>{listDoctors}</ul>
         </div>
       </div>
     </>

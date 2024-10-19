@@ -14,8 +14,6 @@ const validationSchema = Yup.object({
   date: Yup.string().required('Vui lòng chọn ngày')
 })
 
-const timeSlots = ['08:00 - 08:30', '08:30 - 09:00', '09:00 - 09:30', '09:30 - 10:00', '10:00 - 10:30']
-
 type IProps = {
   doctor: IDoctor
 }
@@ -34,8 +32,6 @@ const AppointmentForm: React.FC<IProps> = ({ doctor }) => {
       alert('Đặt lịch thành công!')
     }
   })
-
-  console.log(doctor)
 
   return (
     <div className='max-w-lg mx-auto bg-white p-6 rounded-lg shadow-md'>
@@ -106,7 +102,7 @@ const AppointmentForm: React.FC<IProps> = ({ doctor }) => {
             id='doctor'
             name='doctor'
             type='text'
-            value={doctor.name}
+            value={doctor.fullName}
             className='mt-1 p-2 border border-gray-300 rounded-md w-full'
             readOnly
           />
@@ -136,32 +132,14 @@ const AppointmentForm: React.FC<IProps> = ({ doctor }) => {
           <label htmlFor='timeSlot' className='block text-sm font-medium text-gray-700'>
             Khung giờ
           </label>
-          <RadixSelect.Root
+          <input
+            id='timeSlot'
+            name='timeSlot'
+            type='text'
             value={formik.values.timeSlot}
-            onValueChange={(value) => formik.setFieldValue('timeSlot', value)}
-          >
-            <RadixSelect.Trigger
-              className='mt-1 flex items-center justify-between p-2 border border-gray-300 rounded-md w-full'
-              aria-label='Time slot'
-            >
-              <RadixSelect.Value placeholder='Chọn khung giờ' />
-              {/* <ChevronDownIcon className='w-5 h-5 text-gray-500' />/ */}
-            </RadixSelect.Trigger>
-
-            <RadixSelect.Content>
-              <RadixSelect.Viewport className='p-2 bg-white rounded-md shadow-lg'>
-                {timeSlots.map((slot) => (
-                  <RadixSelect.Item
-                    key={slot}
-                    value={slot}
-                    className='p-2 text-gray-800 cursor-pointer hover:bg-gray-100'
-                  >
-                    {slot}
-                  </RadixSelect.Item>
-                ))}
-              </RadixSelect.Viewport>
-            </RadixSelect.Content>
-          </RadixSelect.Root>
+            disabled
+            className='mt-1 p-2 border border-gray-300 rounded-md w-full bg-gray-100 text-gray-700'
+          />
           {formik.touched.timeSlot && formik.errors.timeSlot ? (
             <p className='text-red-500 text-sm'>{formik.errors.timeSlot}</p>
           ) : null}

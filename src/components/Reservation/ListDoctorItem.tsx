@@ -8,21 +8,32 @@ type IProps = {
 }
 
 export const ListDoctorItem = ({ doctor }: IProps) => {
+  const timeSlots = [
+    '08:00 - 08:30',
+    '08:30 - 09:00',
+    '09:00 - 09:30',
+    '09:30 - 10:00',
+    '10:00 - 10:30',
+    '10:30 - 11:00',
+    '14:00 - 14:30',
+    '14:30 - 15:00',
+    '15:00 - 15:30',
+    '15:30 - 16:00',
+    '16:00 - 16:30',
+    '16:30 - 17:00'
+  ]
   return (
     <>
       <div className='w-full flex flex-row border rounded-lg shadow'>
         {/* Thông tin bác sĩ */}
         <div className='w-1/2 p-3 flex flex-row gap-4'>
           <div className='w-fit flex items-start'>
-            <img className='w-28 rounded-full' src={doctor.image} alt={doctor.name} />
+            <img className='w-28 rounded-full' src={doctor.image} alt={doctor.fullName} />
           </div>
           <div className='flex flex-col gap-y-2'>
-            <span className='font-bold'>{doctor.name}</span>
-            <span className='text-sm'>{doctor.experience}</span>
-            <span className='text-sm'>{doctor.workPlace}</span>
-            <div>
-              <img src='' alt='' />
-            </div>
+            <span className='font-bold'>{doctor.fullName}</span>
+            <span className='text-sm'>{doctor.introduction}</span>
+            <span className='text-sm'>{doctor.major}</span>
           </div>
         </div>
         {/* Chọn lịch khám */}
@@ -40,11 +51,11 @@ export const ListDoctorItem = ({ doctor }: IProps) => {
             </select>
           </div>
           <div className='grid grid-cols-4 gap-2'>
-            {doctor.listTime.map((item) => (
-              <div className=' flex flex-row items-center gap-x-1' key={`${item.time}-${doctor.id}`}>
-                <input type='radio' name={`time-${doctor.id}`} id={`${item.time}-${doctor.id}`} />
-                <label className='text-sm font-semibold' htmlFor={`${item.time}-${doctor.id}`}>
-                  {item.time}
+            {timeSlots.map((item) => (
+              <div className=' flex flex-row items-center gap-x-1' key={`${item}-${doctor.id}`}>
+                <input type='radio' name={`time-${doctor.id}`} id={`${item}-${doctor.id}`} />
+                <label className='text-sm font-semibold' htmlFor={`${item}-${doctor.id}`}>
+                  {item}
                 </label>
               </div>
             ))}

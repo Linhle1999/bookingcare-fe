@@ -4,6 +4,7 @@ import * as Yup from 'yup'
 import * as RadixLabel from '@radix-ui/react-label'
 import Cookies from 'js-cookie'
 import { responseModal } from 'src/models/api-response'
+import { jwtDecode } from 'jwt-decode'
 
 // Validation schema using Yup
 const validationSchema = Yup.object({
@@ -39,6 +40,9 @@ const LoginForm: React.FC = () => {
 
           // Set the token in cookies with a 30-minute expiration
           Cookies.set('token', result.data, { expires: 0.5 }) // 0.5 days = 30 minutes
+
+          const userInfo = jwtDecode(result.data)
+          console.log(userInfo)
 
           // Notify the user about successful login
           alert('Đăng nhập thành công!')

@@ -96,8 +96,7 @@ const SurveyQuestions: React.FC = () => {
   // Cập nhật hàm calculateScore
   const calculateScore = async () => {
     try {
-      const response = await axios.post('http://localhost:8080/submit-answer', { answers })
-      console.log('>>>>>>data', response.data)
+      const response = await axios.post('http://localhost:8080/questions/submit', { answers })
       setTotalScore(response.data.totalScore)
       setDepressionLevel(response.data.depressionLevel)
     } catch (error) {
