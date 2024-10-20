@@ -5,7 +5,6 @@ import Reservation from './components/Reservation/Reservation'
 import LoginForm from './components/Login/LoginForm'
 import RegisterForm from './components/Register/RegisterForm'
 import SurveyQuestions from './components/SurveyQuestions/SurveyQuestions'
-import DepressionTest from './components/SurveyQuestions/DepressionTest'
 
 export default function useRouteElements() {
   const routeElements = useRoutes([
@@ -31,7 +30,7 @@ export default function useRouteElements() {
     },
     {
       path: '/survey',
-      element: <DepressionTest />
+      element: <SurveyQuestions />
     }
   ])
   return routeElements

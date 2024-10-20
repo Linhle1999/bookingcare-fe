@@ -1,177 +1,185 @@
-// Import các thư viện và component cần thiết
-import React, { useState, useEffect } from 'react' // Import React và hai hooks useState và useEffect từ thư viện react
-import axios from 'axios' // Import thư viện axios để thực hiện các request HTTP
-import ProgressBar from './ProgressBar' // Import component ProgressBar
-import Question from './Question' // Import component Question
-import ChatBot from '../ChatBot/ChatBox'
-import { questions } from 'src/assets/data/data'
+import React, { useState, useEffect } from 'react'
+import * as RadixRadioGroup from '@radix-ui/react-radio-group'
+import { questionsTest } from 'src/assets/data/data'
 
-// Định nghĩa interface cho dữ liệu câu hỏi
-interface QuestionData {
-  questionId: number // ID của câu hỏi
-  question: string // Nội dung câu hỏi
-  options: string[] // Các lựa chọn trả lời
-  answers: number[] // Các câu trả lời
+interface Answer {
+  answer: string
+  point: number
 }
 
-// Định nghĩa component SurveyQuestions
-const SurveyQuestions: React.FC = () => {
-  // Khởi tạo các state
-  const [depressionLevel, setDepressionLevel] = useState<string | null>(null)
-  const [currentQuestion, setCurrentQuestion] = useState(0) // State cho câu hỏi hiện tại
-  const [answers, setAnswers] = useState<number[]>([]) // State cho các câu trả lời
-  const [totalScore, setTotalScore] = useState<number | null>(null) // State cho tổng điểm
-  const [questionsData, setQuestionsData] = useState<QuestionData[]>([]) // State cho dữ liệu câu hỏi
-  const [loading, setLoading] = useState(true) // State cho trạng thái loading
-  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null) // State cho câu trả lời đã chọn
+interface Question {
+  id: number
+  questionTitle: string
+  answers: Answer[]
+}
 
-  // Hook useEffect để fetch dữ liệu câu hỏi khi component được mount
+const SurveyQuestions: React.FC = () => {
+  const [questions, setQuestions] = useState<Question[]>([])
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
+  const [selectedAnswerIndex, setSelectedAnswerIndex] = useState<number | null>(null) // Chọn theo chỉ số câu trả lời
+  const [totalPoints, setTotalPoints] = useState(0)
+  const [userAnswers, setUserAnswers] = useState<number[]>([]) // Lưu chỉ số của câu trả lời
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  const questionCallApi: Question[] = [...questionsTest]
+
+  // Gọi API từ URL
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
-        // const response = await axios.get('http://localhost:8080/questions') // Gửi request GET để lấy dữ liệu câu hỏi
-        setQuestionsData(questions) // Cập nhật state questionsData với dữ liệu câu hỏi nhận được
-        // const list: readonly QuestionData[] = [...listQuestions] // Initialize listQuestions with some data
-        // setQuestionsData(list as QuestionData[])
-        setAnswers(new Array(questions.length).fill(0)) // Khởi tạo mảng answers với độ dài bằng số lượng câu hỏi và mỗi phần tử đều là 0
-        setLoading(false) // Đặt trạng thái loading thành false
-      } catch (error) {
-        console.error('Failed to fetch questions:', error) // In lỗi nếu có lỗi xảy ra khi fetch dữ liệu
-        setLoading(false) // Đặt trạng thái loading thành false
+        // const response = await fetch('http://localhost:8080/questions')
+        // if (!response.ok) {
+        //   throw new Error('Failed to fetch questions')
+        // }
+        // const data = await response.json()
+        // setQuestions(data.data)
+        setQuestions(questionCallApi)
+        setLoading(false)
+      } catch (err: any) {
+        setError(err.message)
+        setLoading(false)
       }
     }
 
-    fetchQuestions() // Gọi hàm fetchQuestions
+    fetchQuestions()
   }, [])
 
-  const handleAnswer = (answerIndex: number) => {
-    // Tạo một bản sao của mảng answers hiện tại
-    const newAnswersArray = [...answers]
-
-    // Lấy câu trả lời tương ứng với answerIndex từ câu hỏi hiện tại
-    const selectedAnswer = questionsData[currentQuestion].answers[answerIndex]
-
-    // Thay thế câu trả lời cho câu hỏi hiện tại trong mảng mới
-    newAnswersArray[currentQuestion] = selectedAnswer
-
-    // Cập nhật state answers với mảng mới
-    setAnswers(newAnswersArray)
-  }
-  console.log('🚀 ~ handleAnswer ~ setAnswers:', setAnswers)
-  // Hàm điều hướng đến câu hỏi trước đó
-  const navigateToPreviousQuestion = () => {
-    setCurrentQuestion((prev) => prev - 1) // Giảm currentQuestion đi 1
-
-    setSelectedAnswer(answers[currentQuestion - 1]) // Cập nhật selectedAnswer với câu trả lời của câu hỏi trước đó
+  // Xử lý khi chọn câu trả lời
+  const handleAnswerSelect = (index: number) => {
+    setSelectedAnswerIndex(index)
   }
 
-  // Hàm điều hướng đến câu hỏi tiếp theo
-  const navigateToNextQuestion = () => {
-    const nextQuestion = currentQuestion + 1 // Tính index của câu hỏi tiếp theo
-    setCurrentQuestion(nextQuestion) // Cập nhật currentQuestion
-    setSelectedAnswer(null) // Reset selectedAnswer
+  // Xử lý khi nhấn nút "Câu hỏi kế tiếp"
+  const handleNextQuestion = () => {
+    if (selectedAnswerIndex !== null) {
+      const selectedAnswer = questions[currentQuestionIndex].answers[selectedAnswerIndex]
+      setUserAnswers((prev) => [...prev, selectedAnswerIndex])
+      setTotalPoints((prev) => prev + selectedAnswer.point)
+      setSelectedAnswerIndex(null) // Reset lựa chọn
+      setCurrentQuestionIndex((prev) => prev + 1) // Tăng chỉ số câu hỏi hiện tại
+    }
+  }
 
-    // Nếu câu trả lời cho câu hỏi tiếp theo đã được chọn trước đó, sử dụng nó. Ngược lại, reset selectedAnswer.
-    if (answers[nextQuestion] !== 0) {
-      setSelectedAnswer(answers[nextQuestion])
+  // Xử lý khi nhấn nút "Quay lại"
+  const handlePreviousQuestion = () => {
+    if (currentQuestionIndex > 0) {
+      const lastAnswerIndex = userAnswers.pop() // Lấy câu trả lời gần nhất
+      const lastAnswer = questions[currentQuestionIndex - 1].answers[lastAnswerIndex || 0]
+      setTotalPoints((prev) => prev - (lastAnswer?.point || 0)) // Trừ điểm câu gần nhất
+      setCurrentQuestionIndex((prev) => prev - 1) // Quay lại câu trước
+      setSelectedAnswerIndex(lastAnswerIndex || null) // Hiển thị lựa chọn trước đó
+    }
+  }
+
+  // Khi hoàn thành tất cả câu hỏi, tính kết quả
+  const renderResult = () => {
+    let resultMessage = ''
+
+    if (totalPoints < 14) {
+      resultMessage = 'Không biểu hiện trầm cảm'
+    } else if (totalPoints >= 14 && totalPoints <= 19) {
+      resultMessage = 'Trầm cảm nhẹ'
+    } else if (totalPoints >= 20 && totalPoints <= 29) {
+      resultMessage = 'Trầm cảm vừa'
     } else {
-      setSelectedAnswer(null)
+      resultMessage = 'Trầm cảm nặng'
     }
 
-    // Nếu câu hỏi tiếp theo vượt quá câu hỏi cuối cùng, tính toán điểm số.
-    if (nextQuestion >= questionsData.length) {
-      calculateScore()
-    }
-  }
-
-  // Hàm khởi động lại bài khảo sát
-  const restartSurvey = () => {
-    setCurrentQuestion(0) // Reset currentQuestion về 0
-    setAnswers(new Array(questionsData.length).fill(0)) // Reset mảng answers
-
-    setTotalScore(null) // Reset totalScore
-    setSelectedAnswer(null) // Reset selectedAnswer
-  }
-
-  // Cập nhật hàm calculateScore
-  const calculateScore = async () => {
-    try {
-      const response = await axios.post('http://localhost:8080/questions/submit', { answers })
-      setTotalScore(response.data.totalScore)
-      setDepressionLevel(response.data.depressionLevel)
-    } catch (error) {
-      console.error('Failed to calculate score:', error)
-    }
-  }
-
-  // Cập nhật render cho totalScore và depressionLevel
-  if (totalScore !== null && depressionLevel !== null) {
     return (
-      <div className='relative m-auto h-full w-full items-start px-1 md:w-md lg:w-lg xl:w-xl flex justify-evenly'>
-        <div className='md mx-auto my-6 w-9/12'>
-          <h3 className='text-center text-2xl font-semibold'>Bạn đã hoàn thành Bài Test</h3>
-          <div className='w-full h-72 bg-slate-50 rounded-sm mt-4 py-11 px-6 border-spacing-x-px shadow-xl'>
-            <p className='font-medium'>Điểm Stress:</p>
-            <p className='font-semibold text-center flex justify-center pt-12 text-6xl'>{totalScore}</p>
-
-            <p className='pt-16 font-semibold'> Đánh giá Stress: {depressionLevel}</p>
-            {/* <button
-            className='bg-gray-500 text-white px-40 py-2 rounded hover:bg-gray-600 focus:outline-none mt-12 flex justify-center mx-auto'
-            onClick={restartSurvey}
-          >
-            Làm lại
-          </button> */}
-          </div>
-          {/* <div></div> */}
-        </div>
-        <div className=' mt-10 mx-10'>
-          <div></div>
-          <ChatBot />
-        </div>
+      <div className='mt-8'>
+        <h3 className='text-2xl font-bold'>Kết quả</h3>
+        <p className='mt-2'>Tổng số điểm của bạn: {totalPoints}</p>
+        <p className='mt-2'>Đánh giá: {resultMessage}</p>
       </div>
     )
   }
 
-  // Nếu chưa có totalScore, hiển thị câu hỏi và các nút điều hướng
+  if (loading) {
+    return <div>Loading...</div>
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>
+  }
+
+  // Tạo danh sách A, B, C,... cho các câu trả lời
+  const answerLabels = [
+    'A',
+    'B',
+    'C',
+    'D',
+    'E',
+    'F',
+    'G',
+    'H',
+    'I',
+    'J',
+    'K',
+    'L',
+    'M',
+    'N',
+    'O',
+    'P',
+    'Q',
+    'R',
+    'S',
+    'T',
+    'U',
+    'V',
+    'W',
+    'X',
+    'Y',
+    'Z'
+  ]
+
   return (
-    <div className='relative m-auto h-full w-full items-start px-1 md:w-md lg:w-lg xl:w-xl'>
-      Trạng thái hoàn thành
-      <ProgressBar current={currentQuestion} total={questionsData.length} />
-      <Question
-        data={questionsData[currentQuestion]}
-        onAnswer={handleAnswer}
-        selectedAnswer={selectedAnswer}
-        setSelectedAnswer={setSelectedAnswer}
-      />
-      <div className='sm:flex justify-end mt-10'>
-        {currentQuestion >= 2 && (
-          <button
-            className='bg-[#28a745] font-semibold px-8 py-2   mx-1 md:mx-3 rounded hover:bg-gray-600 text-sm sm:text-base focus:outline-none'
-            onClick={restartSurvey}
+    <div className='max-w-xl mx-auto mt-10 p-6 bg-white shadow rounded'>
+      {currentQuestionIndex < questions.length ? (
+        <>
+          <h2 className='text-2xl font-bold mb-6'>
+            Câu {currentQuestionIndex + 1}: {questions[currentQuestionIndex].questionTitle}
+          </h2>
+
+          <RadixRadioGroup.Root
+            className='flex flex-col space-y-4'
+            value={selectedAnswerIndex !== null ? selectedAnswerIndex.toString() : ''}
+            onValueChange={(value) => handleAnswerSelect(Number(value))}
           >
-            Bắt đầu lại
-          </button>
-        )}
-        {currentQuestion > 0 && (
-          <button
-            className='bg-[#45bee5] font-semibold px-8 py-2 mx-1 md:mx-3 rounded text-sm sm:text-base focus:outline-none'
-            onClick={navigateToPreviousQuestion}
-          >
-            Trước đó
-          </button>
-        )}
-        {currentQuestion < questionsData.length && (
-          <button
-            className={`font-semibold px-8 py-2  mx-1 md:mx-3 rounded text-sm sm:text-base focus:outline-none ${
-              selectedAnswer === null ? 'bg-gray-400' : 'bg-yellow-400'
-            }`}
-            onClick={navigateToNextQuestion}
-            disabled={selectedAnswer === null}
-          >
-            Tiếp theo
-          </button>
-        )}
-      </div>
+            {questions[currentQuestionIndex].answers.map((answer, index) => (
+              <RadixRadioGroup.Item
+                key={index}
+                value={index.toString()} // Chọn theo chỉ số câu trả lời
+                className={`flex flex-row cursor-pointer p-2 rounded-md border ${
+                  selectedAnswerIndex === index ? 'bg-blue-500 text-white' : 'bg-gray-100'
+                }`}
+              >
+                <span className='mr-2'>{answerLabels[index]}.</span> {/* Thêm A, B, C,... */}
+                {answer.answer}
+              </RadixRadioGroup.Item>
+            ))}
+          </RadixRadioGroup.Root>
+
+          <div className='mt-6 flex justify-between'>
+            <button
+              className='bg-gray-300 text-black py-2 px-4 rounded disabled:opacity-50'
+              onClick={handlePreviousQuestion}
+              disabled={currentQuestionIndex === 0}
+            >
+              Quay lại
+            </button>
+            <button
+              className='bg-blue-500 text-white py-2 px-4 rounded disabled:opacity-50'
+              onClick={handleNextQuestion}
+              disabled={selectedAnswerIndex === null}
+            >
+              Câu hỏi kế tiếp
+            </button>
+          </div>
+        </>
+      ) : (
+        renderResult()
+      )}
     </div>
   )
 }

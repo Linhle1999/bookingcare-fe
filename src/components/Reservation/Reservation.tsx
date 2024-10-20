@@ -14,6 +14,7 @@ const Reservation = () => {
     const fetchDoctors = async () => {
       try {
         const response: listAllDoctorsResponse = await axios.get('http://localhost:8080/api/doctors') // Replace with your API endpoint
+        console.log(response)
         setDoctors(response.data.items) // Update state with fetched doctors data
         setLoading(false) // Turn off loading state
       } catch (error) {

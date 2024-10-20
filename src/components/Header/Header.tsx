@@ -8,7 +8,7 @@ const Header = () => {
       <header className='flex w-full bg-[#EDFFFA]'>
         <div className='flex h-[78px] w-4/5 mx-auto items-center lg:w-lg justify-between'>
           <div className='w-1/5 flex items-center'>
-            <Link to='/' className=' '>
+            <Link to='/' className='cursor-pointer'>
               <img
                 className='w-[200px] h-[43px]'
                 src='https://bookingcare.vn/assets/icon/bookingcare-2020.svg'

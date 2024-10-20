@@ -1,48 +1,18 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import React, { useEffect, useState } from 'react'
-import SurveyQuestions from '../SurveyQuestions/SurveyQuestions'
 import bannerImg from '../../assets/images/banner.jpg'
 import khamChuyenKhoaIcon from '../../assets/icons/services/icon-kham-chuyen-khoa.webp'
 import khamTongQuatIcon from '../../assets/icons/services/icon-kham-tong-quat.webp'
 import sucKhoeTinhThanIcon from '../../assets/icons/services/icon-suc-khoe-tinh-than.webp'
 import baiTestSucKhoeIcon from '../../assets/icons/services/icon-bai-test-suc-khoe.webp'
 import yTeGanNhaIcon from '../../assets/icons/services/icon-near-home.webp'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 const Home = () => {
   const navigate = useNavigate()
   const [showPopup, setShowPopup] = useState(false)
   const [surveyStarted, setSurveyStarted] = useState(false) // State mới để theo dõi khi bắt đầu làm bài test
-  const listServices = [
-    {
-      name: 'Khám chuyên khoa',
-      icon: khamChuyenKhoaIcon
-    },
-    {
-      name: 'Khám tổng quát',
-      icon: khamTongQuatIcon
-    },
-    {
-      name: 'Sức khoẻ tinh thần',
-      icon: sucKhoeTinhThanIcon
-    },
-    {
-      name: 'Bài test sức khoẻ',
-      icon: baiTestSucKhoeIcon
-    },
-    {
-      name: 'Y tế gần bạn',
-      icon: yTeGanNhaIcon
-    }
-  ]
-
-  const listServicesContent = listServices.map((service) => (
-    <div className='flex gap-x-8 p-6 items-center w-full border border-gray-300 rounded-xl' key={service.name}>
-      <img className='h-16' src={service.icon} alt={service.name} />
-      <span className='font-bold text-xl'>{service.name}</span>
-    </div>
-  ))
 
   useEffect(() => {
     if (surveyStarted) {
@@ -87,7 +57,42 @@ const Home = () => {
       <div className='w-full xl:w-4/5 mx-auto mt-20'>
         <div className='flex flex-col gap-y-4 mb-10'>
           <h3 className='text-2xl font-bold'>Dịch vụ toàn diện</h3>
-          <div className='grid xl:grid-cols-2 grid-cols-1 gap-8'>{listServicesContent}</div>
+          <div className='grid xl:grid-cols-2 grid-cols-1 gap-8'>
+            <div
+              className='flex gap-x-8 p-6 items-center w-full border border-gray-300 rounded-xl'
+              key='khamChuyenKhoa'
+            >
+              <img className='h-16' src={khamChuyenKhoaIcon} alt='khamChuyenKhoa' />
+              <span className='font-bold text-xl'>Khám chuyên khoa</span>
+            </div>
+            <div
+              className='flex gap-x-8 p-6 items-center w-full border border-gray-300 rounded-xl'
+              key='Khám tổng quát'
+            >
+              <img className='h-16' src={khamTongQuatIcon} alt='khamTongQuat' />
+              <span className='font-bold text-xl'>Khám tổng quát</span>
+            </div>
+            <div
+              className='flex gap-x-8 p-6 items-center w-full border border-gray-300 rounded-xl'
+              key='sucKhoeTinhThan'
+            >
+              <img className='h-16' src={sucKhoeTinhThanIcon} alt='Sức khoẻ tinh thần' />
+              <span className='font-bold text-xl'>Sức khoẻ tinh thần</span>
+            </div>
+            <Link to='/survey'>
+              <div
+                className='flex gap-x-8 p-6 items-center w-full border border-gray-300 rounded-xl'
+                key='baiTestSucKhoe'
+              >
+                <img className='h-16' src={baiTestSucKhoeIcon} alt='Bài test sức khoẻ' />
+                <span className='font-bold text-xl'>Bài test sức khoẻ</span>
+              </div>
+            </Link>
+            <div className='flex gap-x-8 p-6 items-center w-full border border-gray-300 rounded-xl' key='yTeGanNha'>
+              <img className='h-16' src={yTeGanNhaIcon} alt='Y tế gần bạn' />
+              <span className='font-bold text-xl'>Y tế gần bạn</span>
+            </div>
+          </div>
         </div>
         <div className='flex justify-between pb-9'>
           <h6 className='text-2xl font-semibold'>Bài Test đánh giá trầm cảm Beck </h6>
@@ -189,17 +194,6 @@ const Home = () => {
           </div>
         </div>
       )}
-      {/* <div className='-md mx-auto my-6 w-9/12'>
-        <h3>Bạn đã hoàn thành Bài Test</h3>
-        <div className='w-full h-72 bg-slate-50 rounded-sm mt-4 py-11 px-6 border-spacing-x-px shadow-xl'>
-          <p className='font-medium'>Điểm Stress:</p>
-          <p className='font-semibold text-center flex justify-center pt-12 text-6xl'>10</p>
-          <p className='pt-16 font-semibold'>
-            Đánh giá Stress: Bạn không có dấu hiệu gặp rối loạn Stress (Bình thường)
-          </p>
-        </div>
-      </div> */}
-      {/* END  */}
     </div>
   )
 }
