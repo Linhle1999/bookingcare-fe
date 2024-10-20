@@ -33,7 +33,7 @@ const SurveyQuestions: React.FC = () => {
           throw new Error('Failed to fetch questions')
         }
         const data = await response.json()
-        setQuestions(data.data)
+        setQuestions(data)
         // setQuestions(questionCallApi)
         setLoading(false)
       } catch (err: any) {
