@@ -22,19 +22,19 @@ const SurveyQuestions: React.FC = () => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  const questionCallApi: Question[] = [...questionsTest]
+  // const questionCallApi: Question[] = [...questionsTest]
 
   // Gọi API từ URL
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
-        // const response = await fetch('http://localhost:8080/questions')
-        // if (!response.ok) {
-        //   throw new Error('Failed to fetch questions')
-        // }
-        // const data = await response.json()
-        // setQuestions(data.data)
-        setQuestions(questionCallApi)
+        const response = await fetch('http://localhost:8080/questions')
+        if (!response.ok) {
+          throw new Error('Failed to fetch questions')
+        }
+        const data = await response.json()
+        setQuestions(data.data)
+        // setQuestions(questionCallApi)
         setLoading(false)
       } catch (err: any) {
         setError(err.message)
