@@ -28,7 +28,7 @@ const LoginForm: React.FC = () => {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            username: values.username,
+            userName: values.username,
             password: values.password
           })
         })
@@ -47,8 +47,8 @@ const LoginForm: React.FC = () => {
           // Notify the user about successful login
           alert('Đăng nhập thành công!')
 
-          // Redirect to the homepage or dashboard (optional)
-          // window.location.href = '/dashboard'
+          // Redirect to the homepage
+          window.location.href = '/'
         } else {
           // Handle error if the login fails
           alert('Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.')
