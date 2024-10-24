@@ -5,6 +5,8 @@ import Reservation from './components/Reservation/Reservation'
 import LoginForm from './components/Login/LoginForm'
 import RegisterForm from './components/Register/RegisterForm'
 import SurveyQuestions from './components/SurveyQuestions/SurveyQuestions'
+import DoctorList from './components/Reservation/DoctorList'
+import BookingForm from './components/Reservation/BookingForm'
 
 export default function useRouteElements() {
   const routeElements = useRoutes([
@@ -31,6 +33,14 @@ export default function useRouteElements() {
     {
       path: '/survey',
       element: <SurveyQuestions />
+    },
+    {
+      path: '/danh-sach-bac-si',
+      element: <DoctorList />
+    },
+    {
+      path: '/thong-tin-dat-lich',
+      element: <BookingForm />
     }
   ])
   return routeElements

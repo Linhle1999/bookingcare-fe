@@ -39,7 +39,7 @@ const LoginForm: React.FC = () => {
           console.log(result)
 
           // Set the token in cookies with a 30-minute expiration
-          Cookies.set('token', result.data, { expires: 0.5 }) // 0.5 days = 30 minutes
+          Cookies.set('access_token', result.data, { expires: 0.5 })
 
           const userInfo = jwtDecode(result.data)
           console.log(userInfo)
