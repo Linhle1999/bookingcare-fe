@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { useFormik } from 'formik'
 import * as Dialog from '@radix-ui/react-dialog'
 import * as Yup from 'yup'
@@ -14,6 +14,7 @@ interface BookingTimeDTO {
 }
 
 const BookingForm: React.FC = () => {
+  const navigate = useNavigate()
   const location = useLocation()
   const doctor = location.state?.doctor
 
@@ -105,6 +106,8 @@ const BookingForm: React.FC = () => {
           body: JSON.stringify(bookingData)
         })
         const data = await response.json()
+        alert('Đặt lịch tư vấn thành công!')
+        navigate('/danh-sach-bac-si')
         console.log('Đặt lịch thành công:', data)
       } catch (error) {
         console.error('Lỗi khi đặt lịch:', error)
