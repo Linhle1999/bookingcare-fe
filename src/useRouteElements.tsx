@@ -1,7 +1,6 @@
 import { useRoutes } from 'react-router-dom'
 import Home from './components/Home/Home'
 import ChatBot from './components/ChatBot/ChatBox'
-import Reservation from './components/Reservation/Reservation'
 import LoginForm from './components/Login/LoginForm'
 import RegisterForm from './components/Register/RegisterForm'
 import SurveyQuestions from './components/SurveyQuestions/SurveyQuestions'
@@ -13,10 +12,6 @@ export default function useRouteElements() {
     {
       path: '/',
       element: <Home />
-    },
-    {
-      path: '/dat-lich',
-      element: <Reservation />
     },
     {
       path: '/chatbot',
