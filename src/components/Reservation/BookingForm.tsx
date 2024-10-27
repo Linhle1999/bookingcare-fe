@@ -26,7 +26,9 @@ const BookingForm: React.FC = () => {
     try {
       setLoading(true)
       const response = await fetch(
-        `http://localhost:8080/api/bookings/doctor?doctorId=${doctorId}&bookingDate=${new Date(bookingDate)}`
+        `http://localhost:8080/api/bookings/doctor?doctorId=${doctorId}&bookingDate=${new Date(
+          bookingDate
+        ).toISOString()}`
       )
       const data = await response.json()
       // const response = {
@@ -91,7 +93,7 @@ const BookingForm: React.FC = () => {
       const bookingData = {
         ...values,
         doctorId: doctor.id,
-        bookingDate: new Date(selectedDate)
+        bookingDate: new Date(selectedDate).toISOString()
       }
       try {
         const response = await fetch('http://localhost:8080/api/bookings', {
