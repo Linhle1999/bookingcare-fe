@@ -1,15 +1,10 @@
-import Header from './components/Header/Header'
+import { LoadingProvider } from './contexts/loadingProvider'
 import useRouteElements from './useRouteElements'
 
 function App() {
   const routeElements = useRouteElements()
 
-  return (
-    <div>
-      <Header />
-      {routeElements}
-    </div>
-  )
+  return <LoadingProvider>{routeElements}</LoadingProvider>
 }
 
 export default App

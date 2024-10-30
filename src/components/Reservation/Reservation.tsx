@@ -3,32 +3,31 @@ import { ListDoctorItem } from './ListDoctorItem'
 import axios from 'axios' // Axios or fetch can be used to make the API call
 import { listAllDoctorsResponse } from 'src/models/api-response'
 import { IDoctor } from 'src/models/doctor'
+import { useLoading } from 'src/contexts/loadingContext'
 
 const Reservation = () => {
+  const { startLoading, endLoading } = useLoading()
+
   const [doctors, setDoctors] = useState<IDoctor[]>([]) // State to hold doctors data
-  const [loading, setLoading] = useState(true) // Loading state
   const [error, setError] = useState('') // Error state
 
   useEffect(() => {
+    startLoading()
     // Fetch doctors' information when component mounts
     const fetchDoctors = async () => {
       try {
         const response: listAllDoctorsResponse = await axios.get('http://localhost:8080/api/doctors') // Replace with your API endpoint
         console.log(response)
         setDoctors(response.data.items) // Update state with fetched doctors data
-        setLoading(false) // Turn off loading state
       } catch (error) {
         setError('Failed to fetch doctors information')
-        setLoading(false) // Turn off loading state even if there's an error
+      } finally {
+        endLoading()
       }
     }
 
     fetchDoctors()
   }, []) // Empty dependency array to run only once when the component mounts
-
-  if (loading) {
-    return <p>Loading...</p> // Show loading state
-  }
 
   if (error) {
     return <p>{error}</p> // Show error message if fetching fails

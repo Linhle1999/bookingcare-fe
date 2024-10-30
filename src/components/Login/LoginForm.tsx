@@ -5,6 +5,7 @@ import * as RadixLabel from '@radix-ui/react-label'
 import Cookies from 'js-cookie'
 import { responseModal } from 'src/models/api-response'
 import { jwtDecode } from 'jwt-decode'
+import { useLoading } from 'src/contexts/loadingContext'
 
 // Validation schema using Yup
 const validationSchema = Yup.object({
@@ -13,6 +14,8 @@ const validationSchema = Yup.object({
 })
 
 const LoginForm: React.FC = () => {
+  const { startLoading, endLoading } = useLoading()
+
   const formik = useFormik({
     initialValues: {
       username: '',
@@ -21,6 +24,7 @@ const LoginForm: React.FC = () => {
     validationSchema,
     onSubmit: async (values) => {
       try {
+        startLoading()
         // Send the POST request to the login API
         const response = await fetch('http://localhost:8080/auth/signin', {
           method: 'POST',
@@ -56,6 +60,8 @@ const LoginForm: React.FC = () => {
       } catch (error) {
         console.error('Error logging in:', error)
         alert('Có lỗi xảy ra. Vui lòng thử lại sau.')
+      } finally {
+        endLoading()
       }
     }
   })
