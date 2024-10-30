@@ -32,6 +32,7 @@ const DoctorCard: React.FC<{ doctor: Doctor }> = ({ doctor }) => {
       <p className='text-sm text-gray-500'>{doctor.title}</p>
       <p className='text-md mt-2'>{doctor.major}</p>
       <p className='text-gray-700 mt-2'>{doctor.introduction}</p>
+      <p className='text-lg mt-2'>Giá: Tuỳ theo từng trường hợp</p>
       <button
         onClick={handleBooking}
         className='mt-4 w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition-all'
@@ -45,36 +46,36 @@ const DoctorCard: React.FC<{ doctor: Doctor }> = ({ doctor }) => {
 const DoctorList: React.FC = () => {
   const [doctors, setDoctors] = useState<Doctor[]>([])
 
-  const listDoctorsApi = {
-    status: 'OK',
-    data: {
-      totalPages: 1,
-      totalItems: 2,
-      currentPage: 0,
-      first: true,
-      last: true,
-      pageItemSize: 2,
-      pageSize: 20,
-      items: [
-        {
-          id: 2,
-          fullName: 'John Doe',
-          introduction: 'Bác sĩ đa khoa giàu kinh nghiệm.',
-          major: 'Y học tổng hợp',
-          title: 'MD',
-          image: 'doctor1.jpg'
-        },
-        {
-          id: 3,
-          fullName: 'Jane Smith',
-          introduction: 'Bác sĩ chuyên khoa răng trẻ em.',
-          major: 'Răng hàm mặt trẻ em',
-          title: 'DDS',
-          image: 'doctor2.jpg'
-        }
-      ]
-    }
-  }
+  // const listDoctorsApi = {
+  //   status: 'OK',
+  //   data: {
+  //     totalPages: 1,
+  //     totalItems: 2,
+  //     currentPage: 0,
+  //     first: true,
+  //     last: true,
+  //     pageItemSize: 2,
+  //     pageSize: 20,
+  //     items: [
+  //       {
+  //         id: 2,
+  //         fullName: 'John Doe',
+  //         introduction: 'Bác sĩ đa khoa giàu kinh nghiệm.',
+  //         major: 'Y học tổng hợp',
+  //         title: 'MD',
+  //         image: 'doctor1.jpg'
+  //       },
+  //       {
+  //         id: 3,
+  //         fullName: 'Jane Smith',
+  //         introduction: 'Bác sĩ chuyên khoa răng trẻ em.',
+  //         major: 'Răng hàm mặt trẻ em',
+  //         title: 'DDS',
+  //         image: 'doctor2.jpg'
+  //       }
+  //     ]
+  //   }
+  // }
 
   useEffect(() => {
     // Gọi API lấy danh sách bác sĩ
