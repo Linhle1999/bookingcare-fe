@@ -16,6 +16,11 @@ const DoctorCard: React.FC<{ doctor: Doctor }> = ({ doctor }) => {
 
   // Hàm xử lý khi nhấn vào nút "Đặt lịch tư vấn"
   const handleBooking = () => {
+    // kiểm tra đăng nhập
+    if (!localStorage.getItem('access_token')) {
+      alert('Vui lòng đăng nhập trước khi đặt lịch')
+      return
+    }
     // Chuyển hướng sang trang "/thong-tin-dat-lich" với thông tin của bác sĩ
     navigate('/thong-tin-dat-lich', { state: { doctor } })
   }
